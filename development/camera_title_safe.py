@@ -21,7 +21,7 @@ bl_info = {
     "name": "Camera Add Title Safe",
     "description": "Add Camera Title Safe: A Blender Python operator for adding a mesh-based title-safe frame to a 3D camera. The frame's size adjusts automatically to active scene's render resolution and aspect ratio, and is independent to the 3D camera's own scale.",
     "author": "Adhi Hargo, Aditia A. Pratama",
-    "version": (0, 5),
+    "version": (0, 6),
     "blender": (2, 66,1),
     "location": "3D View > Tool Shelf (T-key) or press 'K' in 3D viewport", 
     "warning": "",
@@ -164,8 +164,8 @@ class CameraAddTitleSafe(bpy.types.Operator):
             target.id = camera.data
             target.data_path = 'lens'
 
-        drivers[0].expression = '((%(fs)s if rX > rY else %(fs)s * ((rX*arX) / (rY*arY))) * (35.0/fl)) / scX' % dict(fs = .365 * self.frame_scale)
-        drivers[1].expression = '((%(fs)s if rY > rX else %(fs)s * ((rY*arY) / (rX*arX))) * (35.0/fl)) / scY' % dict(fs = .365 * self.frame_scale)
+        drivers[0].expression = '((%(fs)s if rX > rY else %(fs)s * ((rX*arX) / (rY*arY))) * (35.1/fl)) / scX' % dict(fs = .365 * self.frame_scale)
+        drivers[1].expression = '((%(fs)s if rY > rX else %(fs)s * ((rY*arY) / (rX*arX))) * (39.4/fl)) / scY' % dict(fs = .365 * self.frame_scale)
         drivers[2].expression = '1 / scale_z'
 
         camera.select = True
@@ -190,13 +190,47 @@ class TitleSafeVisibility(bpy.types.Panel):
         col=layout.column()
         
         col.operator("object.camera_add_titlesafe_frame",
-                     text="Title Safe", icon="OUTLINER_DATA_CAMERA")        
+                     text="Add Title Safe", icon="OUTLINER_DATA_CAMERA")
+        col.operator("object.camera_remove_titlesafe_frame", text="Remove Title Safe", icon="CANCEL")
+        
+class TitleSafeMenu(bpy.types.Menu):
+    bl_label = "Camera Tools"
+    bl_idname = "camera.tools_menu"
+    
+    @classmethod
+    def poll(self, context):
+        return context.active_object and context.active_object.type == 'CAMERA'
+    
+    def draw(self, context):
+        layout = self.layout
+        
+        layout.operator("object.camera_add_titlesafe_frame",
+                     text="Add Title Safe", icon="OUTLINER_DATA_CAMERA")
+        layout.operator("object.camera_remove_titlesafe_frame", text="Remove Title Safe", icon="CANCEL")
+        
+addon_keymaps = []
 
 def register():
-    bpy.utils.register_module(__name__)
-   
+
+    bpy.utils.register_class(TitleSafeMenu)
+     
+    wm = bpy.context.window_manager
+    
+    km = wm.keyconfigs.addon.keymaps.new(name='Object Mode', space_type='EMPTY')
+    kmi = km.keymap_items.new('wm.call_menu', 'K', 'PRESS')
+    kmi.properties.name = 'camera.tools_menu' 
+
+
+    addon_keymaps.append(km)
+
 def unregister():
-    bpy.utils.unregister_module(__name__)
+    bpy.utils.unregister_class(TitleSafeMenu)
+        
+    
+    wm = bpy.context.window_manager
+    for km in addon_keymaps:
+        wm.keyconfigs.addon.keymaps.remove(km)
+    del addon_keymaps[:]        
  
 if __name__ == "__main__":
     register()
