@@ -31,9 +31,31 @@ bl_info = {
 
 import bpy
 
+TITLESAFE_FRAME_SUFFIX = 'titlesafe_frame'
+
+class CameraRemoveTitleSafe(bpy.types.Operator):
+    '''Remove title-safe frame'''
+    bl_idname = 'object.camera_remove_titlesafe_frame'
+    bl_label = 'Remove Camera Title Safe'
+    bl_options = {'REGISTER', 'UNDO'}
+
+    @classmethod
+    def poll(self, context):
+        return context.active_object.type == 'CAMERA'\
+            and True in [c.name.endswith(TITLESAFE_FRAME_SUFFIX)
+                         for c in context.active_object.children]
+
+    def execute(self, context):
+        for obj in context.active_object.children:
+            if obj.name.endswith(TITLESAFE_FRAME_SUFFIX):
+                obj.name += "_deleted"
+                context.scene.objects.unlink(obj)
+                bpy.data.objects.remove(obj)
+        return {'FINISHED'}    
+
 class CameraAddTitleSafe(bpy.types.Operator):
-    'Add Title Safe Render'
-    bl_idname = 'object.camera_add_title_safe'
+    '''Add title-safe frame'''
+    bl_idname = 'object.camera_add_titlesafe_frame'
     bl_label = 'Add Camera Title Safe'
     bl_options = {'REGISTER', 'UNDO'}
     
@@ -45,18 +67,21 @@ class CameraAddTitleSafe(bpy.types.Operator):
         description = "Scale the frame against Blender's default",
         )
 
+    @classmethod
+    def poll(self, context):
+        return context.active_object and context.active_object.type == 'CAMERA'
+
     def execute(self, context):
         if (not context.active_object or
             context.active_object.type != 'CAMERA'):
             return {'CANCELLED'}
 
-        name_suffix = "titlesafe_frame"
         camera = context.active_object
         for o in camera.children:
-            if o.name.endswith(name_suffix):
+            if o.name.endswith(TITLESAFE_FRAME_SUFFIX):
                 return {'CANCELLED'}
 
-        frame_name = "%s_%s" % (camera.name, name_suffix)
+        frame_name = "%s_%s" % (camera.name, TITLESAFE_FRAME_SUFFIX)
         frame_data = bpy.data.meshes.new(frame_name)
         frame_data.from_pydata([(-1, -1, -1), (-1, 1, -1),
                                 (1, 1, -1), (1, -1, -1),
@@ -149,22 +174,26 @@ class CameraAddTitleSafe(bpy.types.Operator):
 
         return {'FINISHED'}
            
-class TItleSafeVisibility(bpy.types.Panel):
-    'Add Title Safe Render'
+class TitleSafeVisibility(bpy.types.Panel):
+    '''Add Title Safe Render'''
     bl_label = "Camera Tools"
     bl_space_type = "VIEW_3D"
     bl_region_type = "TOOLS"
+
+    @classmethod
+    def poll(self, context):
+        return context.active_object and context.active_object.type == 'CAMERA'
        
     def draw (self, context):
         layout=self.layout
                                                    
         col=layout.column()
         
-        col.operator("object.camera_add_title_safe",  text="Title Safe", icon="OUTLINER_DATA_CAMERA")
-        
+        col.operator("object.camera_add_titlesafe_frame",
+                     text="Title Safe", icon="OUTLINER_DATA_CAMERA")        
 
 def register():
-   bpy.utils.register_module(__name__)
+    bpy.utils.register_module(__name__)
    
 def unregister():
     bpy.utils.unregister_module(__name__)
