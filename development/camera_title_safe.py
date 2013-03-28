@@ -149,8 +149,8 @@ class CameraAddTitleSafe(bpy.types.Operator):
 
         return {'FINISHED'}
            
-class TItleSafeVisibility(bpy.types.Panel):
-    'Add Title Safe Render'
+class TitleSafeVisibility(bpy.types.Panel):
+    '''Add Title Safe Render'''
     bl_label = "Camera Tools"
     bl_space_type = "VIEW_3D"
     bl_region_type = "TOOLS"
@@ -160,11 +160,11 @@ class TItleSafeVisibility(bpy.types.Panel):
                                                    
         col=layout.column()
         
-        col.operator("object.camera_add_title_safe",  text="Title Safe", icon="OUTLINER_DATA_CAMERA")
-        
+        col.operator("object.camera_add_title_safe",
+                     text="Title Safe", icon="OUTLINER_DATA_CAMERA")        
 
 def register():
-   bpy.utils.register_module(__name__)
+    bpy.utils.register_module(__name__)
    
 def unregister():
     bpy.utils.unregister_module(__name__)
