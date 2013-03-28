@@ -25,8 +25,8 @@ bl_info = {
     "blender": (2, 66,1),
     "location": "3D View > Tool Shelf (T-key) or press 'K' in 3D viewport", 
     "warning": "",
-    "wiki_url": "",
-    "tracker_url": "https://github.com/aditiapratama/myb3d_addons",
+    "wiki_url": "https://github.com/aditiapratama/script-dev/wiki",
+    "tracker_url": "https://github.com/aditiapratama/script-dev",
     "category": "3D View"}
 
 import bpy
