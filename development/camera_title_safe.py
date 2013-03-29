@@ -69,7 +69,9 @@ class CameraAddTitleSafe(bpy.types.Operator):
 
     @classmethod
     def poll(self, context):
-        return context.active_object and context.active_object.type == 'CAMERA'
+        return context.active_object and context.active_object.type == 'CAMERA'\
+            and not (True in [c.name.endswith(TITLESAFE_FRAME_SUFFIX)
+                              for c in context.active_object.children])
 
     def execute(self, context):
         if (not context.active_object or
@@ -211,8 +213,7 @@ class TitleSafeMenu(bpy.types.Menu):
 addon_keymaps = []
 
 def register():
-
-    bpy.utils.register_class(TitleSafeMenu)
+    bpy.utils.register_module(__name__)
      
     wm = bpy.context.window_manager
     
@@ -220,24 +221,16 @@ def register():
     kmi = km.keymap_items.new('wm.call_menu', 'K', 'PRESS')
     kmi.properties.name = 'camera.tools_menu' 
 
-
     addon_keymaps.append(km)
 
 def unregister():
-    bpy.utils.unregister_class(TitleSafeMenu)
-        
+    bpy.utils.unregister_module(__name__)
     
     wm = bpy.context.window_manager
     for km in addon_keymaps:
         wm.keyconfigs.addon.keymaps.remove(km)
-    del addon_keymaps[:]        
+    del addon_keymaps[:]
  
-def register():
-   bpy.utils.register_module(__name__)
-   
-def unregister():
-    bpy.utils.unregister_module(__name__)
-
 if __name__ == "__main__":
     register()
   
