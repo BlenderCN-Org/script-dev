@@ -166,8 +166,8 @@ class CameraAddTitleSafe(bpy.types.Operator):
             target.id = camera.data
             target.data_path = 'lens'
 
-        drivers[0].expression = '((%(fs)s if rX > rY else %(fs)s * ((rX*arX) / (rY*arY))) * (35.1/fl)) / scX' % dict(fs = .365 * self.frame_scale)
-        drivers[1].expression = '((%(fs)s if rY > rX else %(fs)s * ((rY*arY) / (rX*arX))) * (39.4/fl)) / scY' % dict(fs = .365 * self.frame_scale)
+        drivers[0].expression = '((%(fs)s if rX > rY else %(fs)s * ((rX*arX) / (rY*arY))) * (35.0/fl)) / scX' % dict(fs = .365 * self.frame_scale)
+        drivers[1].expression = '((%(fs)s if rY > rX else %(fs)s * ((rY*arY) / (rX*arX))) * (35.0/fl)) / scY' % dict(fs = .411 * self.frame_scale)
         drivers[2].expression = '1 / scale_z'
 
         camera.select = True
