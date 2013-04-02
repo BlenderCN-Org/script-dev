@@ -188,12 +188,13 @@ class TitleSafeVisibility(bpy.types.Panel):
        
     def draw (self, context):
         layout=self.layout
-                                                   
+
         col=layout.column()
-        
-        col.operator("object.camera_add_titlesafe_frame",
+
+        row = col.row(align=True)        
+        row.operator("object.camera_add_titlesafe_frame",
                      text="Add Title Safe", icon="OUTLINER_DATA_CAMERA")
-        col.operator("object.camera_remove_titlesafe_frame", text="Remove Title Safe", icon="CANCEL")
+        row.operator("object.camera_remove_titlesafe_frame", text='', icon="CANCEL")
         
 class TitleSafeMenu(bpy.types.Menu):
     bl_label = "Camera Tools"
