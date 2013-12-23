@@ -57,7 +57,7 @@ class CameraPollMixin:
 class VIEW3D_OT_toggle_titlesafe_frame(CameraPollMixin, bpy.types.Operator):
     '''Toggle title-safe frame'''
     bl_idname = 'object.camera_toggle_titlesafe_frame'
-    bl_label = 'Toggle Camera Title Safe'
+    bl_label = 'Toggle Title Safe'
     bl_options = {'REGISTER', 'UNDO'}
 
     frame_scale = bpy.props.FloatProperty(
