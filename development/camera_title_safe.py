@@ -39,7 +39,13 @@ def draw_object_item(self, context):
     layout.operator("object.camera_toggle_titlesafe_frame",
                     icon="OUTLINER_DATA_CAMERA")
 
-class VIEW3D_OT_toggle_titlesafe_frame(bpy.types.Operator):
+class CameraPollMixin:
+
+    @classmethod
+    def poll(self, context):
+        return context.active_object and context.active_object.type == 'CAMERA'
+
+class VIEW3D_OT_toggle_titlesafe_frame(CameraPollMixin, bpy.types.Operator):
     '''Toggle title-safe frame'''
     bl_idname = 'object.camera_toggle_titlesafe_frame'
     bl_label = 'Toggle Camera Title Safe'
@@ -169,24 +175,15 @@ class VIEW3D_OT_toggle_titlesafe_frame(bpy.types.Operator):
         frame.select = False
         context.scene.objects.active = camera
 
-class VIEW3D_PT_titlesafe(bpy.types.Panel):
+class VIEW3D_PT_titlesafe(CameraPollMixin, bpy.types.Panel):
     bl_label = "Camera Tools"
     bl_space_type = "VIEW_3D"
     bl_region_type = "TOOLS"
 
-    @classmethod
-    def poll(self, context):
-        return context.active_object and context.active_object.type == 'CAMERA'
-       
     draw = draw_object_item
         
-class TitleSafeMenu(bpy.types.Menu):
+class VIEW3D_MT_titlesafe(CameraPollMixin, bpy.types.Menu):
     bl_label = "Camera Tools"
-    bl_idname = "camera.tools_menu"
-    
-    @classmethod
-    def poll(self, context):
-        return context.active_object and context.active_object.type == 'CAMERA'
     
     draw = draw_object_item
         
