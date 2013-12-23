@@ -39,6 +39,15 @@ def draw_object_item(self, context):
     layout.operator("object.camera_toggle_titlesafe_frame",
                     icon="OUTLINER_DATA_CAMERA")
 
+def draw_object_specials(self, context):
+    obj = context.active_object
+    if not (obj and obj.type == 'CAMERA'):
+        return
+
+    layout = self.layout
+    layout.separator()
+    layout.operator("object.camera_toggle_titlesafe_frame")
+
 class CameraPollMixin:
 
     @classmethod
@@ -187,28 +196,15 @@ class VIEW3D_MT_titlesafe(CameraPollMixin, bpy.types.Menu):
     
     draw = draw_object_item
         
-        
-
-addon_keymaps = []
-
 def register():
     bpy.utils.register_module(__name__)
      
-    wm = bpy.context.window_manager
-    
-    km = wm.keyconfigs.addon.keymaps.new(name='Object Mode', space_type='EMPTY')
-    kmi = km.keymap_items.new('wm.call_menu', 'K', 'PRESS')
-    kmi.properties.name = 'camera.tools_menu' 
-
-    addon_keymaps.append(km)
+    bpy.types.VIEW3D_MT_object_specials.append(draw_object_specials)
 
 def unregister():
     bpy.utils.unregister_module(__name__)
     
-    wm = bpy.context.window_manager
-    for km in addon_keymaps:
-        wm.keyconfigs.addon.keymaps.remove(km)
-    del addon_keymaps[:]
+    bpy.types.VIEW3D_MT_object_specials.remove(draw_object_specials)
  
 if __name__ == "__main__":
     register()
