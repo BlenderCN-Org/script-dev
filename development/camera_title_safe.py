@@ -18,8 +18,8 @@
 
 # <pep8 compliant>
 bl_info = {
-    "name": "Camera Add Title Safe",
-    "description": "Add Camera Title Safe: A Blender Python operator for adding a mesh-based title-safe frame to a 3D camera. The frame's size adjusts automatically to active scene's render resolution and aspect ratio, and is independent to the 3D camera's own scale.",
+    "name": "Camera Title Safe",
+    "description": "Toggles presence of mesh-based title-safe frame to a 3D camera. The frame's size adjusts automatically to active scene's render resolution and aspect ratio, and is independent to the 3D camera's own scale.",
     "author": "Adhi Hargo, Aditia A. Pratama",
     "version": (0, 6),
     "blender": (2, 66,1),
