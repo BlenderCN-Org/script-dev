@@ -23,7 +23,7 @@ bl_info = {
     "author": "Adhi Hargo, Aditia A. Pratama",
     "version": (0, 6),
     "blender": (2, 66,1),
-    "location": "3D View > Tool Shelf (T-key) or press 'K' in 3D viewport", 
+    "location": "3D View > Tool Shelf (T-key) and 3D View > Specials (W-key)", 
     "warning": "",
     "wiki_url": "https://github.com/aditiapratama/script-dev/wiki",
     "tracker_url": "https://github.com/aditiapratama/script-dev",
